@@ -46,9 +46,7 @@ $ ./main.out [iothreadnum]
 
 采用multiReactor+非阻塞IO+epoll的模式，mainMeactor负责接受请求，subReactor负责处理处理具体的读写任务.
 
-![并发模型](/home/oil_you/Project/Github/WebServer/model.png)
-
-
+![并发模型](https://github.com/youxiaokai/WebServer/blob/master/model.png?raw=true)
 
 
 
