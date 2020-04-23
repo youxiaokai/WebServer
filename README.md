@@ -48,11 +48,79 @@ $ ./main.out [iothreadnum]
 
 ![并发模型](https://github.com/youxiaokai/WebServer/blob/master/model.png?raw=true)
 
+## Performance Test
+
+本项目采用了开源的压测工具ab进行了压测，在开启4个IO线程的情况下，压测结果如下：
+
+```
+ab -n 5000 -c 200 http://0.0.0.0:12345/ 
+
+This is ApacheBench, Version 2.3 <$Revision: 1807734 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking 0.0.0.0 (be patient)
+Completed 500 requests
+Completed 1000 requests
+Completed 1500 requests
+Completed 2000 requests
+Completed 2500 requests
+Completed 3000 requests
+Completed 3500 requests
+Completed 4000 requests
+Completed 4500 requests
+Completed 5000 requests
+Finished 5000 requests
+
+
+Server Software:        Muduo
+Server Hostname:        0.0.0.0
+Server Port:            12345
+
+Document Path:          /
+Document Length:        2124 bytes
+
+Concurrency Level:      200
+Time taken for tests:   0.201 seconds
+Complete requests:      5000
+Failed requests:        0
+Total transferred:      11010000 bytes
+HTML transferred:       10620000 bytes
+Requests per second:    24848.67 [#/sec] (mean)
+Time per request:       8.049 [ms] (mean)
+Time per request:       0.040 [ms] (mean, across all concurrent requests)
+Transfer rate:          53434.35 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   1.0      2       3
+Processing:     2    4   1.5      4      12
+Waiting:        1    4   1.6      3      12
+Total:          3    5   1.1      5      12
+WARNING: The median and mean for the initial connection time are not within a normal deviation
+        These results are probably not that reliable.
+
+Percentage of the requests served within a certain time (ms)
+  50%      5
+  66%      5
+  75%      5
+  80%      6
+  90%      6
+  95%      7
+  98%     10
+  99%     11
+ 100%     12 (longest request)
+```
+
+可以看到，该服务器运行稳定，吞吐量达到  24848.67 [#/sec] ，存在一定的瓶颈，还需要进一步完善提升。
 
 
 
+## Others
 
+本项目将持续更新完善。由于时间关系，目前只完成了初步框架编写，性能存在一定瓶颈，还需进一步提升完善。
 
+初步构想，接下来将添加时间轮、工作线程池、异步日志等功能。
 
 
 
