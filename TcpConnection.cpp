@@ -21,7 +21,10 @@ void detail::defaultMessageCallback(const TcpConnection::TcpConnectionPtr&,
     buf->retrieveAll();
 }
 
-////构造函数
+const void detail::defaultTimerCallback() {
+    cout<<"connection time out!"<<endl;
+}
+
 TcpConnection::TcpConnection(EventLoop *loop,
         const string& nameArg,
         int sockfd,
@@ -29,15 +32,15 @@ TcpConnection::TcpConnection(EventLoop *loop,
         const InetAddress &peerAddr)
 :loop_(loop),
 name_(nameArg),
-state_(kConnecting),//初始状态为kConnecting
+state_(kConnecting),
 reading_(true),
-socket_(new Socket(sockfd)),//RAII管理已连接套接字
-channel_(new Channel(loop,sockfd)), //使用Channel管理套接字上的读写
+socket_(new Socket(sockfd)),
+channel_(new Channel(loop,sockfd)),
 localAddr_(localAddr),
-peerAddr_(peerAddr)
+peerAddr_(peerAddr),
+timer_(new Timer(0, Timer::TimerType::TIMER_ONCE, std::bind(&detail::defaultTimerCallback)))
 // highWaterMark_(64*1024*1024)
 {
-	//设置事件分发器的各事件回调  (将TcpConnection类的四个事件处理函数设置为事件分发器对应的回调函数)
     channel_->setReadCallback(
             std::bind(&TcpConnection::handleRead,this)
             );
@@ -54,11 +57,13 @@ peerAddr_(peerAddr)
 //              << " fd=" << sockfd<<endl;//this显示为内存
     socket_->setKeepAlive(true);
 }
-//析构函数
+
 TcpConnection::~TcpConnection() {
 //    cout << "TcpConnection::destructor[" <<  name_ << "] at " << this
 //              << " fd=" << channel_->fd()
 //              << " state=" << stateToString();
+    delete(timer_);
+    timer_=nullptr;
     assert(state_==kDisconnected);
 }
 
@@ -257,7 +262,7 @@ void TcpConnection::handleRead() {
     if(n>0){
         messageCallback_(shared_from_this(),&inputBuffer_);
     }
-    else if(n==0){ //关闭链接
+    else if(n==0){
         handleClose();
     }
     else{

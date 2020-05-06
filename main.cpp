@@ -85,44 +85,7 @@ void onRequest(const HttpRequest& req, HttpResponse* resp)
         resp->setStatusMessage("OK");//ok
         resp->setContentType("text/html ");//html文本
         resp->addHeader("Server", "Oil_you");//增加头部
-        resp->setBody(root); 
-        // struct stat sbuf;
-        // if(stat("/home/oil_you/桌面/1.pdf",&sbuf)<0){
-        //     resp->setStatusCode(HttpResponse::k200Ok); //状态码200
-        //     resp->setStatusMessage("OK");//ok
-        //     resp->setContentType("text/html ");//html文本
-        //     resp->addHeader("Server", "Oil_you");//增加头部
-        //     resp->setBody(root); 
-        // }
-        // else{
-        //     resp->setStatusCode(HttpResponse::k200Ok); //状态码200
-        //     resp->setStatusMessage("OK");//ok
-        //     resp->setContentType("application/pdf");//html文本
-        //     resp->addHeader("Server", "Oil_you");//增加头部
-
-        //     int srcFd;
-        //     const char* filePath="/home/oil_you/桌面/1.pdf";
-     
-        //     if(srcFd=open( filePath,O_RDONLY,0)<0){
-        //      perror("open file");
-        //     }
-
-        //     void* mmapRet=::mmap(NULL,sbuf.st_size,PROT_READ,MAP_PRIVATE,srcFd,0);
-        //      close(srcFd);
-        //     char* srcAddr=static_cast<char*>(mmapRet);
-        //         if (MAP_FAILED == srcAddr){//若是mmap函数调用失败
-        //           perror("mmap ");
-        //        }
-
-        //       string files(srcAddr,sbuf.st_size);
-        //      resp->setBody(files);  
-        
-        //       if(munmap(srcAddr,sbuf.st_size)==-1){
-        //        perror("munmap error");
-        //       }
-
-        //     }
-              
+        resp->setBody(root);              
     }
     else if (req.path() == "/favicon.ico") //如果访问/favicon.ico路径，响应发送一张图片
     {

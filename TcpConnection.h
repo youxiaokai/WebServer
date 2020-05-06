@@ -9,6 +9,7 @@
 #include "EventLoop.h"
 #include "Socket.h"
 #include "Buffer.h"
+#include "Timer.h"
 
 using std::string;
 
@@ -20,6 +21,7 @@ public:
     typedef std::function<void(const TcpConnectionPtr&, Buffer* buf)> MessageCallback;
     typedef std::function<void (const TcpConnectionPtr&)> CloseCallback;
     typedef std::function<void (const TcpConnectionPtr&)> WriteCompleteCallback;
+    typedef std::function<void()> Callback;
 //    typedef std::function<void (const TcpConnectionPtr&, size_t)> HighWaterMarkCallback;
 
     TcpConnection(EventLoop* loop,
@@ -46,7 +48,7 @@ public:
     void forceClose();
     //void forceCloseWithDelay(double seconds);
 
-    void setTcpNoDelay(bool on);//禁用Nagle算法，避免连续发包出现延迟，这对编写低延迟网络服务很重要
+    void setTcpNoDelay(bool on);
 
     void startRead();
     void stopRead();
@@ -56,9 +58,12 @@ public:
     const boost::any& getContext() const { return context_; }
     boost::any* getMutableContext() { return &context_; }
 
+    void setTimer(Timer* timer){timer_= timer;}
+    const Timer* getTimer() const{return timer_;}
+    Timer*  getMutableTimer(){return timer_;}
+
     int sockfd() const {return channel_->fd();}
 
-	//以下接口为设置连接对应的各种回调:
     void setConnectionCallback(const ConnectionCallback& cb){ connectionCallback_=cb;}
     void setMessageCallback(const MessageCallback& cb) { messageCallback_ = cb; }
     void setWriteCompleteCallback(const WriteCompleteCallback& cb){ writeCompleteCallback_ = cb; }
@@ -71,17 +76,15 @@ public:
     Buffer* inputBuffer(){return &inputBuffer_;}
     Buffer* outputBuffer(){return &outputBuffer_;}
 
-	// called when TcpServer accepts a new connection
-    void connectEstablished();// should be called only once
-	// called when TcpServer has removed me from its map
-    void connectDestroyed();// should be called only once
+    void connectEstablished();
+    void connectDestroyed();
 
 private:
-    enum StateE{kConnecting,kConnected,kDisconnecting,kDisconnected};//对于一个连接的从生到死进行了状态的定义，类似一个状态机 //分别代表：已经断开、初始状态、已连接、正在断开
-    void handleRead();//处理读事件
-    void handleWrite();//处理写事件
-    void handleClose(); //处理关闭事件
-    void handleErro();  //处理错误事件
+    enum StateE{kConnecting,kConnected,kDisconnecting,kDisconnected};
+    void handleRead();
+    void handleWrite();
+    void handleClose();
+    void handleErro();
 
     void sendInLoop(const string& message);
     void sendInLoop(const void* message, size_t len);
@@ -104,7 +107,6 @@ private:
     const InetAddress localAddr_;  //本地地址
     const InetAddress peerAddr_;  //外接地址
 
-	 //关注三个半事件  (这几个回调函数通过handle**那四个事件处理函数调用)
     ConnectionCallback connectionCallback_;
     MessageCallback messageCallback_;
 
@@ -114,8 +116,10 @@ private:
 
 //    size_t highWaterMark_;
 
-    Buffer inputBuffer_;//输入缓冲区
-    Buffer outputBuffer_;//输出缓冲区
+    Buffer inputBuffer_;
+    Buffer outputBuffer_;
+
+    Timer* timer_;
 
     boost::any context_;
 
@@ -126,6 +130,7 @@ namespace detail{//默认回调函数？？
 
     void defaultMessageCallback(const TcpConnection::TcpConnectionPtr&,
                                 Buffer* buf);
+    const void defaultTimerCallback();
 }
 
 

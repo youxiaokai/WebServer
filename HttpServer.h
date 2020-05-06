@@ -9,6 +9,8 @@
 #include "HttpRequest.h"
 #include "HttpResponse.h"
 
+
+
 class HttpServer:boost::noncopyable {
 public:
     typedef std::function<void(const HttpRequest&,

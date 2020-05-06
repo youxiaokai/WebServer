@@ -4,6 +4,7 @@
 
 #include "HttpServer.h"
 #include "HttpContext.h"
+#include "TimerManager.h"
 
 namespace detail{
 void defaultHttpCallback(const HttpRequest&,HttpResponse* resp){
@@ -25,6 +26,7 @@ HttpServer::HttpServer(EventLoop *loop,
     //消息到来回调该函数
     server_.setMessageCallback(
             std::bind(&HttpServer::onMessage, this, std::placeholders::_1, std::placeholders::_2));
+    TimerManager::GetTimerManagerInstance()->Start(); //HttpServer定时器管理器启动
 }
 
 void HttpServer::start() {
@@ -43,12 +45,18 @@ void HttpServer::onConnection(const TcpConnection::TcpConnectionPtr &conn) {
         printf("onConnection():new connection [%s] form %s\n",
                conn->name().c_str(),
                conn->peerAddress().toIpPort().c_str());
+        Timer* timer=new Timer(5000, Timer::TimerType::TIMER_ONCE, std::bind(&TcpConnection::shutdown, conn));
+        timer->Start();//添加timer到管理器
+        conn->setTimer(timer);
     }
 }
 
 void HttpServer::onMessage(const TcpConnection::TcpConnectionPtr &conn, Buffer *buf) {
     //取出请求，mutable可以改变
     HttpContext* context=boost::any_cast<HttpContext>(conn->getMutableContext());
+    Timer* timer= conn->getMutableTimer();
+
+    timer->Adjust(5000, Timer::TimerType::TIMER_ONCE, std::bind(&TcpConnection::shutdown, conn));
 
     //调用context的parseRequest解析请求，返回bool是否请求成功
     if(!context->parseRequest(buf)){
@@ -56,8 +64,8 @@ void HttpServer::onMessage(const TcpConnection::TcpConnectionPtr &conn, Buffer *
         conn->shutdown(); //关闭连接
     }
 
-    printf("onMessage():received %zd byte from connection [%s]\n",buf->readableBytes(),
-           conn->name().c_str());
+//    printf("onMessage():received %zd byte from connection [%s]\n",buf->readableBytes(),
+//           conn->name().c_str());
 
     if(context->kGotAll){//请求成功
         //调用onRequest
