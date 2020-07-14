@@ -82,10 +82,35 @@ void onRequest(const HttpRequest& req, HttpResponse* resp)
  if (req.path() == "/")
     {
         resp->setStatusCode(HttpResponse::k200Ok); //状态码200
-        resp->setStatusMessage("OK");//ok
-        resp->setContentType("text/html ");//html文本
-        resp->addHeader("Server", "Oil_you");//增加头部
-        resp->setBody(root);              
+         resp->setStatusMessage("OK");//ok
+         resp->setContentType("text/html");//html文本
+         resp->addHeader("Server", "Oil_you");//增加头部
+
+        char buffer[4096];
+        memset(buffer, 0, sizeof(buffer));
+        FILE* fp = NULL;
+        const char* filePath="/home/oil_you/桌面/我的简历.html";
+        string responseBody;
+        if((fp = fopen(filePath, "rb")) == NULL){
+            perror("fopen file");
+            return;
+        }
+        while(fread(buffer, sizeof(buffer), 1, fp) == 1)//也可以mmap内存映射优化，但不知为何我这种方式跑不通？？？
+        {
+            responseBody.append(buffer);
+            memset(buffer, 0, sizeof(buffer));
+        }
+        if(feof(fp))
+        {
+            responseBody.append(buffer);
+        }
+        else
+        {
+            std::cout << "error fread" << std::endl;
+        }
+        fclose(fp);
+
+        resp->setBody(responseBody);              
     }
     else if (req.path() == "/favicon.ico") //如果访问/favicon.ico路径，响应发送一张图片
     {
