@@ -31,38 +31,7 @@ using namespace std;
 //IgnoreSigPipe initObj;
 
 extern char favicon[555];
-string root{ "<!DOCTYPE html>"
-          "<html>"
-            "<head>"
-            "<meta charset=\"utf-8\"> "
-            "<title>油孝凯的主页(runoob.com)</title>"
-            "</head>"
-            "<body>"
-            "<h1>我的简历</h1>"
-            "<hr />"
-            "<h2>个人信息</h2>"
-            "<p>姓名：油孝凯 &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  生日：1994.11.22</p>"
-            "<p>手机：18718886406 &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  邮箱：oil_you@126.com</p>"
 
-            "<hr />"
-            "<h2>教育背景</h2>"
-            "<p>2018.09-2021-06&nbsp  &nbsp   &nbsp   &nbsp   &nbsp 华南理工大学 &nbsp  &nbsp   &nbsp   &nbsp   &nbsp 电子与信息学院&nbsp  &nbsp   &nbsp   &nbsp   &nbsp集成电路工程 </p>"
-            "<p>2012.09-2016-06&nbsp  &nbsp   &nbsp   &nbsp   &nbsp 华南理工大学 &nbsp  &nbsp   &nbsp   &nbsp   &nbsp 电子与信息学院&nbsp  &nbsp   &nbsp   &nbsp   &nbsp信息工程 </p>"
-
-            "<hr />"
-            "<h2>专业技能</h2>"
-            "<p>	熟悉掌握c++，熟悉数据结构和常用算法； </p>"
-            "<p>	了解linux网络编程，熟悉计算机网络相关知识，了解TCP/IP协议； </p>"
-            "<p>	 Linux下有一定的开发能力，Windows下有VS的C++的开发经验；</p>"
-
-            "<hr />"
-            "<h2>项目经历</h2>"
-            "<p>	C++多线程HTTP服务器&nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp 负责人&开发者</p>"
-            "<p>	计算器壳表面字体缺陷检测系统   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp 负责人&开发者</p>"
-            "<p>	轮毂缺陷自动检测系统&nbsp&nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp  &nbsp  &nbsp   &nbsp   &nbsp   &nbsp   &nbsp   &nbsp 负责人&开发者</p>"
-
-            "</body>"
-            "</html>"};;
 bool benchmark =true;
 
 
@@ -224,34 +193,6 @@ char favicon[555] = {
         '\x0', '\x0', '\x0', 'I', 'E', 'N', 'D', '\xAE',
         'B', '\x60', '\x82',
 };
-
-//  if (req.path() == "/")
-//     {
-//         resp->setStatusCode(HttpResponse::k200Ok); //状态码200
-//         resp->setStatusMessage("OK");//ok
-//         resp->setContentType("application/pdf");//html文本
-//         resp->addHeader("Server", "Oil_you");//增加头部
-
-//         int  fd;
-//         const char* filePath="/home/oil_you/桌面/1.pdf";
-     
-//         if(fd=open( filePath,O_RDONLY,0)<0){
-//             perror("open file");
-//         }      
-
-//         int len=read(fd,Buffer,buffer_size);
-//         cout<<"文件大小："<<len<<endl;
-
-//         if(len<0){
-//             perror("read");
-//         }
-
-//         string file=Buffer;        
-//         close(fd);
-        
-//         resp->setBody(file);  
-
-//     }
 
 // if (req.path() == "/")
 //     {
