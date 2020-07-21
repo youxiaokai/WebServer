@@ -39,9 +39,7 @@ private:
     Channel listenChannel;//和监听套接字绑定的通道
     NewConnetionCallback newConnetionCallback_;//一旦有新连接发生执行的回调函数
     bool listenning_;//acceptChannel所处的EventLoop是否处于监听状态
-    int idleFd_;//用来解决文件描述符过多引起电平触发不断触发的问题，后文会有解释
-
-
+    int idleFd_;//用来解决文件描述符过多引起电平触发不断触发的问题
 };
 
 
